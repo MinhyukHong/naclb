@@ -34,6 +34,13 @@ using Nan::Set;
 * Crypto verification function (Ed25519)
 */
 NAN_METHOD(verify) {
+  if (info.Length() < 3
+      || !info[0]->IsUint8Array()
+      || !info[1]->IsUint8Array()
+      || !info[2]->IsUint8Array()) {
+    return Nan::ThrowTypeError("verify() expects three Uint8Array arguments: message, signature, public key");
+  }
+
   // Reading clear message
   Local<Object> msg = info[0]->ToObject();
   u64 mlen = msg.As<Uint8Array>()->Length();
@@ -60,6 +67,12 @@ NAN_METHOD(verify) {
 * Crypto signature function (Ed25519)
 */
 NAN_METHOD(sign) {
+  if (info.Length() < 2
+      || !info[0]->IsUint8Array()
+      || !info[1]->IsUint8Array()) {
+    return Nan::ThrowTypeError("sign() expects two Uint8Array arguments: message, secret key");
+  }
+
   // Reading clear message
   Local<Object> msg = info[0]->ToObject();
   u64 mlen = msg.As<Uint8Array>()->Length() - bug_offset;
