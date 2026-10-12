@@ -99,6 +99,9 @@ NAN_METHOD(sign) {
   u64 smlen = 0;
 
   sm = (u8*) malloc(mlen + crypto_sign_BYTES);
+  if (sm == NULL) {
+    return Nan::ThrowError("sign() failed to allocate the signature buffer");
+  }
 
   // Signing
   crypto_sign(sm,&smlen,m2,mlen,seck);
