@@ -13,6 +13,8 @@ typedef i64 gf[16];
 
 const int crypto_sign_BYTES = 64;
 const int bug_offset = 64;
+const int crypto_sign_PUBLICKEYBYTES = 32;
+const int crypto_sign_SECRETKEYBYTES = 64;
 
 using v8::Local;
 using v8::Object;
