@@ -54,6 +54,12 @@ NAN_METHOD(verify) {
 
   // Reading public key
   Local<Object> pub = info[2]->ToObject();
+  if (pub.As<Uint8Array>()->Length() != (size_t) crypto_sign_PUBLICKEYBYTES) {
+    return Nan::ThrowRangeError("verify() expects a 32 byte public key");
+  }
+  if (msg.As<Uint8Array>()->Length() < smlen) {
+    return Nan::ThrowRangeError("verify() expects the message buffer to be at least as large as the signature");
+  }
   const u8* pubk = static_cast<u8*>(pub.As<Uint8Array>()->Buffer()->GetContents().Data());
 
   // Verifying authenticity
@@ -84,6 +90,9 @@ NAN_METHOD(sign) {
 
   // Reading public key
   Local<Object> sec = info[1]->ToObject();
+  if (sec.As<Uint8Array>()->Length() != (size_t) crypto_sign_SECRETKEYBYTES) {
+    return Nan::ThrowRangeError("sign() expects a 64 byte secret key");
+  }
   const u8* seck = static_cast<u8*>(sec.As<Uint8Array>()->Buffer()->GetContents().Data());
 
   u8* sm;
