@@ -75,6 +75,9 @@ NAN_METHOD(sign) {
 
   // Reading clear message
   Local<Object> msg = info[0]->ToObject();
+  if (msg.As<Uint8Array>()->Length() < (size_t) bug_offset) {
+    return Nan::ThrowRangeError("sign() expects the message to be prefixed with 64 bytes");
+  }
   u64 mlen = msg.As<Uint8Array>()->Length() - bug_offset;
   const u8* m = static_cast<u8*>(msg.As<Uint8Array>()->Buffer()->GetContents().Data());
   const u8* m2 = m + bug_offset;
